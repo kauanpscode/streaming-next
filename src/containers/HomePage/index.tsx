@@ -7,10 +7,12 @@ export type HomePageProps = {
 
 export default function HomePage({ posts }: HomePageProps) {
   return (
-    <Container>
-      {posts.map((post) => (
-        <h2 key={post.title}>{post.title}</h2>
-      ))}
-    </Container>
+    <>
+      <Container>
+        {posts.map((post) => (
+          <h2 key={post.title}>{post.title}</h2>
+        ))}
+      </Container>
+    </>
   );
 }

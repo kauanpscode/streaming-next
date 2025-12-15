@@ -1,7 +1,7 @@
 import { GetStaticProps } from 'next';
 import HomePage from '../containers/HomePage';
 import { PostData } from '../domain/posts/post';
-import { getAllPosts } from '../data/posts/get-all-posts';
+import { getAllSeries } from '../data/series/get-all-series';
 
 export type HomeProps = {
   posts: PostData[];
@@ -12,7 +12,7 @@ export default function Home({ posts }: HomeProps) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = await getAllPosts();
+  const posts = await getAllSeries();
 
   return {
     props: { posts },
