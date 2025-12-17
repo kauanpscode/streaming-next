@@ -26,6 +26,8 @@
     "eslint-config-next": "16.0.6",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.5.0",
+    "strapi-sdk-js": "^3.0.0",
+    "strapi-to-typescript": "^2.0.15",
     "tailwindcss": "^4",
     "typescript": "^5",
     "typescript-eslint": "^8.48.1"

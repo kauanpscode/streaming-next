@@ -1,20 +1,20 @@
 import { GetStaticProps } from 'next';
 import HomePage from '../containers/HomePage';
-import { PostData } from '../domain/posts/post';
+import { TvSeries } from '../domain/types/types';
 import { getAllSeries } from '../data/series/get-all-series';
 
 export type HomeProps = {
-  posts: PostData[];
+  series: TvSeries[];
 };
 
-export default function Home({ posts }: HomeProps) {
-  return <HomePage posts={posts} />;
+export default function Home({ series }: HomeProps) {
+  return <HomePage series={series} />;
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = await getAllSeries();
+  const series = await getAllSeries();
 
   return {
-    props: { posts },
+    props: { series },
   };
 };

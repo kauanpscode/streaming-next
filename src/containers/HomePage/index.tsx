@@ -1,16 +1,16 @@
 import { Container } from './styles';
-import { PostData } from '@/src/domain/posts/post';
+import { TvSeries } from '@/src/domain/types/types';
 
 export type HomePageProps = {
-  posts: PostData[];
+  series: TvSeries[];
 };
 
-export default function HomePage({ posts }: HomePageProps) {
+export default function HomePage({ series }: HomePageProps) {
   return (
     <>
       <Container>
-        {posts.map((post) => (
-          <h2 key={post.title}>{post.title}</h2>
+        {series.map((serie) => (
+          <h2 key={serie.title}>{serie.title}</h2>
         ))}
       </Container>
     </>

@@ -1,11 +1,10 @@
-// src/components/Footer/index.tsx
-import React from 'react';
+import { FooterStyle } from "./styles";
 
 const Footer: React.FC = () => {
   return (
-    <footer>
+    <FooterStyle>
       <p>&copy; {new Date().getFullYear()} Streaming-Next. Todos os direitos reservados.</p>
-    </footer>
+    </FooterStyle>
   );
 };
 

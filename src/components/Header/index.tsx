@@ -6,7 +6,7 @@ import {
   NavList,
   NavItem,
   NavLink
-} from "./style";
+} from "./styles";
 
 const Header = () => {
   return (
@@ -17,17 +17,10 @@ const Header = () => {
             <NavLink as="span">Pontes</NavLink>
           </Link>
         </Logo>
-
         <NavList>
           <NavItem>
             <Link href="/" passHref>
               <NavLink>Home</NavLink>
-            </Link>
-          </NavItem>
-
-          <NavItem>
-            <Link href="/about" passHref>
-              <NavLink>Sobre</NavLink>
             </Link>
           </NavItem>
         </NavList>
