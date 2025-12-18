@@ -5,6 +5,7 @@ import { GlobalStyles } from '../styles/global-styles';
 import { AppProps } from "next/app";
 
 import { roboto } from "../fonts/fonts";
+import { MainContainer } from "./styles";
 
 /* eslint-disable react/prop-types */
 export default function MyApp({ Component, pageProps } : AppProps) {
@@ -12,9 +13,9 @@ export default function MyApp({ Component, pageProps } : AppProps) {
     <div id="root" className={roboto.className}>
       <GlobalStyles />
         <Header />
-        <main>
+        <MainContainer>
           <Component {...pageProps} />
-        </main>
+        </MainContainer>
         <Footer />
     </div>
   );
