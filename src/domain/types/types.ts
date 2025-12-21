@@ -17,6 +17,7 @@ export type Season = {
   createdAt: DateString;
   updatedAt: DateString;
   publishedAt: DateString;
+  episodes: Episode[];
 };
 
 export type MediaFormat = {
@@ -74,4 +75,14 @@ export type TvSeries = {
 
   genre: Genre;
   seasons: Season[];
+};
+
+export type Episode = {
+  id: ID;
+  documentId: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  duration?: number;
+  cover?: Media;
 };
