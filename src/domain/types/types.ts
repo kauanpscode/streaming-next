@@ -79,6 +79,7 @@ export type TvSeries = {
 
 export type Episode = {
   id: ID;
+  episode_number: number;
   documentId: string;
   title: string;
   description: string;

@@ -1,24 +1,15 @@
-import {
-  Container,
-  Row,
-  Card,
-  Cover,
-  VideoPlayerContainer,
-  ModalHero,
-  ModalContent,
-  MetaData,
-  SeasonSelect,
-  EpisodeList
-} from './styles';
 import { TvSeries } from '@/src/domain/types/types';
 import { useState, useMemo } from 'react';
 import { Modal } from '@/src/components/Modal/Modal';
+import { useRouter } from 'next/router';
 
 export type HomePageProps = {
   series: TvSeries[];
 };
 
 export default function HomePage({ series }: HomePageProps) {
+  const router = useRouter();
+
   const [selectedSerie, setSelectedSerie] = useState<TvSeries | null>(null);
   const [selectedSeasonId, setSelectedSeasonId] = useState<number | null>(null);
   const [watchingEpisode, setWatchingEpisode] = useState<Episode | null>(null);
@@ -42,143 +33,107 @@ export default function HomePage({ series }: HomePageProps) {
     setWatchingEpisode(null);
   };
 
-  if (!series.length) return null;
+  if (series && !series.length) return null;
 
   return (
-    <>
-      <Container>
-        <h2>Séries</h2>
-        <Row>
-          {series.map((serie) => (
-            <Card
-              key={serie.id}
-              onClick={() => setSelectedSerie(serie)}
-              style={{ cursor: 'pointer' }}
-            >
-              <Cover src={serie.poster.formats.small.url} alt={serie.title} />
-            </Card>
-          ))}
-        </Row>
-      </Container>
+    <div className="min-h-screen bg-neutral-900 text-white p-8">
+      <h1 className="text-3xl font-bold">Séries</h1>
+      <hr className="mb-5" />
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        {series.map((serie) => (
+          <div
+            key={serie.id}
+            className="cursor-pointer hover:scale-105 transition"
+            onClick={() => handleOpenSerie(serie)}
+          >
+            <img
+              src={serie.poster?.formats?.small?.url}
+              alt={serie.title}
+              className="w-full h-[250px] object-cover rounded"
+            ></img>
+          </div>
+        ))}
+      </div>
 
-      <Modal isOpen={!!selectedSerie} onClose={handleClose}>
-        {selectedSerie && (
-          <>
-            {/* CENÁRIO 1: Assistindo Vídeo */}
-            {watchingEpisode ? (
-              <VideoPlayerContainer>
-                <button
-                  className="back-btn"
-                  onClick={() => setWatchingEpisode(null)}
-                >
-                  ← Voltar aos Episódios
-                </button>
-                <video controls autoPlay>
-                  <source src={watchingEpisode.videoUrl} type="video/mp4" />
-                  Seu navegador não suporta vídeos.
-                </video>
-              </VideoPlayerContainer>
-            ) : (
-              /* CENÁRIO 2: Detalhes da Série (Estilo Netflix) */
+      {selectedSerie && (
+        <Modal isOpen={true} onClose={() => handleClose(selectedSerie)}>
+          <div className="relative w-full h-[420px]">
+            <img
+              src={
+                selectedSerie.background?.formats?.large?.url ||
+                selectedSerie.poster?.formats?.small?.url
+              }
+              alt={selectedSerie.title}
+              className="w-full h-full object-cover"
+            />
+
+            {/* OVERLAY */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+
+            {/* INFO NO BANNER */}
+            <div className="absolute bottom-6 left-6 right-6">
+              <h2 className="text-4xl font-bold mb-2">{selectedSerie.title}</h2>
+
+              <span className="text-sm text-neutral-300">
+                {selectedSerie.genre?.name}
+              </span>
+            </div>
+          </div>
+          <div className="p-6 space-y-6">
+            <p className="text-sm text-neutral-300 leading-relaxed max-w-3xl">
+              {selectedSerie.description}
+            </p>
+
+            {selectedSerie.seasons && (
               <div>
-                {/* Hero Image no Topo */}
-                <ModalHero bgUrl={selectedSerie.background.url} />
-
-                <ModalContent>
-                  <h1>{selectedSerie.title}</h1>
-
-                  <MetaData>
-                    <span className="match">98% Relevante</span>
-                    <span className="year">
-                      {new Date(selectedSerie.publishedAt).getFullYear()}
-                    </span>
-                    <span className="genre">{selectedSerie.genre.name}</span>
-                    <span>{selectedSerie.seasons.length} Temporadas</span>
-                  </MetaData>
-
-                  <p style={{ lineHeight: '1.6', fontSize: '1.1rem' }}>
-                    {selectedSerie.description}
-                  </p>
-
-                  {/* Seletor de Temporadas (Só exibe se tiver temporadas) */}
-                  {selectedSerie.seasons.length > 0 && (
-                    <div style={{ marginTop: '2rem' }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <h3>Episódios</h3>
-                        <SeasonSelect
-                          value={selectedSeasonId || ''}
-                          onChange={(e) =>
-                            setSelectedSeasonId(Number(e.target.value))
-                          }
-                        >
-                          {selectedSerie.seasons.map((season) => (
-                            <option key={season.id} value={season.id}>
-                              Temporada {season.season}
-                            </option>
-                          ))}
-                        </SeasonSelect>
-                      </div>
-
-                      {/* Lista de Episódios */}
-                      <EpisodeList>
-                        {currentSeason?.episodes?.map((ep, index) => (
-                          <EpisodeItem
-                            key={ep.id}
-                            onClick={() => setWatchingEpisode(ep)}
-                          >
-                            <div className="number">{index + 1}</div>
-
-                            {/* Tenta pegar a capa do episódio, se não tiver, usa o poster da série */}
-                            <img
-                              className="thumb"
-                              src={
-                                ep.cover?.url ||
-                                selectedSerie.poster.formats.small?.url
-                              }
-                              alt={ep.title}
-                            />
-
-                            <div className="info">
-                              <h4>{ep.title}</h4>
-                              <p>
-                                {ep.description
-                                  ? ep.description.substring(0, 120) + '...'
-                                  : 'Sem descrição.'}
-                              </p>
-                            </div>
-
-                            <div className="play-icon">▶</div>
-                          </EpisodeItem>
-                        ))}
-
-                        {/* Fallback se a temporada estiver vazia */}
-                        {(!currentSeason?.episodes ||
-                          currentSeason.episodes.length === 0) && (
-                          <p
-                            style={{
-                              padding: '20px',
-                              textAlign: 'center',
-                              color: '#666',
-                            }}
-                          >
-                            Nenhum episódio cadastrado nesta temporada.
-                          </p>
-                        )}
-                      </EpisodeList>
-                    </div>
-                  )}
-                </ModalContent>
+                <h3 className="text-lg font-semibold mb-2">Temporadas</h3>
+                <div className="flex gap-2 flex-wrap">
+                  {selectedSerie.seasons.map((season) => (
+                    <button
+                      key={season.id}
+                      onClick={() => setSelectedSeasonId(season.id)}
+                      className={`px-4 py-2 rounded text-sm border transition ${
+                        season.id === selectedSeasonId
+                          ? 'bg-white text-black'
+                          : 'border-neutral-700 text-neutral-300 hover:border-white'
+                      }`}
+                    >
+                      {' '}
+                      Temporada {season.season}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
-          </>
-        )}
-      </Modal>
-    </>
+
+            {currentSeason?.episodes && (
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Episódios</h3>
+
+                <div className="space-y-3">
+                  {currentSeason.episodes.map((episode) => (
+                    <div
+                      key={episode.id}
+                      onClick={() => router.push(`/watch/${episode.id}`)}
+                      className="flex gap-4 p-3 rounded cursor-pointer hover:bg-neutral-800 transition"
+                    >
+                      <div className="w-32 h-20 bg-neutral-700 rounded flex items-center justify-center text-sm">
+                        EP. {episode.episode_number}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold">{episode.title}</h4>
+                        <p className="text-sm text-neutral-400 line-clamp-2">
+                          {episode.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </Modal>
+      )}
+    </div>
   );
 }
