@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getEpisodeById } from '@/src/config/app-config';
+import { getEpisodeById, VIDEO_URL } from '@/src/config/app-config';
 
 export default function WatchEpisodePage() {
   const router = useRouter();
   const { episodeId } = router.query;
 
-  const [episode, setEpisode] = useState<any>(null);
+  const [episode, setEpisode] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,7 +32,9 @@ export default function WatchEpisodePage() {
 
   if (!episode) return null;
 
-  const videoUrl = episode.video?.url;
+  const videoUrl = episode.video_url;
+
+  console.log('VIDEO: ', videoUrl)
 
   return (
     <div className="min-h-screen bg-black text-white relative">

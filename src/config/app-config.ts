@@ -16,5 +16,7 @@ export const getEpisodeById = async (id: string | number) => {
   const res = await fetch(`${API_URL}/episodes?filters[id][$eq]=${id}&populate=*`);
 
   const json = await res.json();
-  return json.data;
+  return json.data[0] ?? null;
 };
+
+export const VIDEO_URL = 'https://pub-9d6582f2d76447a6bc5e7db2bec33edc.r2.dev/';
