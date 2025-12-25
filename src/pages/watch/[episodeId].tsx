@@ -34,8 +34,6 @@ export default function WatchEpisodePage() {
 
   const videoUrl = episode.video_url;
 
-  console.log('VIDEO: ', videoUrl)
-
   return (
     <div className="min-h-screen bg-black text-white relative">
       <button

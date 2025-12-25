@@ -12,11 +12,11 @@ export default function HomePage({ series }: HomePageProps) {
 
   const [selectedSerie, setSelectedSerie] = useState<TvSeries | null>(null);
   const [selectedSeasonId, setSelectedSeasonId] = useState<number | null>(null);
-  const [watchingEpisode, setWatchingEpisode] = useState<Episode | null>(null);
+
+  const [selectedMovie, setSelectedMovie] = useState<TvSeries | null>(null);
 
   const handleOpenSerie = (serie: TvSeries) => {
     setSelectedSerie(serie);
-    setWatchingEpisode(null);
 
     if (serie.seasons && serie.seasons.length > 0) {
       setSelectedSeasonId(serie.seasons[0].id);
@@ -30,7 +30,6 @@ export default function HomePage({ series }: HomePageProps) {
 
   const handleClose = (serie: TvSeries) => {
     setSelectedSerie(null);
-    setWatchingEpisode(null);
   };
 
   if (series && !series.length) return null;
@@ -39,7 +38,7 @@ export default function HomePage({ series }: HomePageProps) {
     <div className="min-h-screen bg-neutral-900 text-white p-8">
       <h1 className="text-3xl font-bold">Séries</h1>
       <hr className="mb-5" />
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4">
         {series.map((serie) => (
           <div
             key={serie.id}
@@ -66,11 +65,7 @@ export default function HomePage({ series }: HomePageProps) {
               alt={selectedSerie.title}
               className="w-full h-full object-cover"
             />
-
-            {/* OVERLAY */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-
-            {/* INFO NO BANNER */}
             <div className="absolute bottom-6 left-6 right-6">
               <h2 className="text-4xl font-bold mb-2">{selectedSerie.title}</h2>
 
@@ -134,6 +129,11 @@ export default function HomePage({ series }: HomePageProps) {
           </div>
         </Modal>
       )}
+      <h1 className='text-3xl font-bold mt-3'>Filmes</h1>
+      <hr/>
+      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4">
+
+      </div>
     </div>
   );
 }
