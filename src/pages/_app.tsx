@@ -10,7 +10,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className={`${roboto.className} min-h-screen bg-black text-white flex flex-col`}>
       <Header />
-      <main className="flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
+      <main className="flex-1 mx-auto w-full">
         <Component {...pageProps} />
       </main>
       <Footer />

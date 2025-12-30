@@ -35,9 +35,8 @@ export default function HomePage({ series }: HomePageProps) {
   if (series && !series.length) return null;
 
   return (
-    <div className="min-h-screen bg-neutral-900 text-white p-8">
-      <h1 className="text-3xl font-bold">Séries</h1>
-      <hr className="mb-5" />
+    <div className="min-h-screen text-white p-8">
+      <h1 className="text-2xl font-bold">Séries</h1>
       <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4">
         {series.map((serie) => (
           <div
@@ -109,7 +108,10 @@ export default function HomePage({ series }: HomePageProps) {
                   {currentSeason.episodes.map((episode) => (
                     <div
                       key={episode.id}
-                      onClick={() => router.push(`/watch/${episode.id}`)}
+                      onClick={() => {
+                        setSelectedSerie(null);
+                        router.push(`/watch/${episode.id}`);
+                      }}
                       className="flex gap-4 p-3 rounded cursor-pointer hover:bg-neutral-800 transition"
                     >
                       <div className="w-32 h-20 bg-neutral-700 rounded flex items-center justify-center text-sm">
@@ -129,11 +131,8 @@ export default function HomePage({ series }: HomePageProps) {
           </div>
         </Modal>
       )}
-      <h1 className='text-3xl font-bold mt-3'>Filmes</h1>
-      <hr/>
-      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4">
-
-      </div>
+      <h1 className="text-2xl font-bold mt-3">Filmes</h1>
+      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4"></div>
     </div>
   );
 }
