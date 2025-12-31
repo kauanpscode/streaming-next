@@ -38,9 +38,9 @@ export default function WatchEpisodePage() {
     <div className="min-h-screen bg-black text-white relative">
       <button
         onClick={() => router.back()}
-        className="absolute top-6 left-6 z-10 bg-black/70 px-4 py-2 rounded hover:bg-black"
+        className="absolute rounded-full top-6 left-6 z-10 bg-black/70 px-4 py-2 rounded hover:bg-black"
       >
-        ← Voltar
+        ←
       </button>
 
       <video
@@ -49,11 +49,6 @@ export default function WatchEpisodePage() {
         autoPlay
         className="w-full h-screen object-contain bg-black"
       />
-
-      <div className="absolute bottom-10 left-10 max-w-xl">
-        <h1 className="text-2xl font-bold">{episode.title}</h1>
-        <p className="text-sm text-neutral-300">{episode.description}</p>
-      </div>
     </div>
   );
 }

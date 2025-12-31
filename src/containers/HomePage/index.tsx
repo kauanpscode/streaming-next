@@ -37,7 +37,7 @@ export default function HomePage({ series }: HomePageProps) {
   return (
     <div className="min-h-screen text-white p-8">
       <h1 className="text-2xl font-bold">Séries</h1>
-      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
         {series.map((serie) => (
           <div
             key={serie.id}

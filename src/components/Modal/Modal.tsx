@@ -1,6 +1,8 @@
 import { ReactNode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
+import { X } from 'lucide-react';
+
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -21,7 +23,7 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 
     return () => {
       document.body.style.overflow = 'unset';
-    }
+    };
   }, [isOpen]);
 
   if (!mounted || !isOpen) return null;
@@ -33,10 +35,11 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          className="absolute top-4 right-4 z-[1010] flex h-10 w-10 items-center justify-center rounded-full bg-[#1a1a1a] text-2xl text-white hover:bg-zinc-800 transition-colors"
+          className="absolute top-1 right-1 z-[1010] flex h-10 w-10 items-center justify-center rounded-full bg-black/80 text-white hover:bg-zinc-800 transition-colors"
           onClick={onClose}
+          aria-label="Fechar"
         >
-          &times;
+          <X size={20} strokeWidth={2.5} />
         </button>
         <div className="p-6">{children}</div>
       </div>
