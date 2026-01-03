@@ -1,19 +1,19 @@
-import { TvSeries } from '@/src/domain/types/types';
+import { TvSeries, Movie } from '@/src/domain/types/types';
 import { useState, useMemo } from 'react';
 import { Modal } from '@/src/components/Modal/Modal';
 import { useRouter } from 'next/router';
 
 export type HomePageProps = {
   series: TvSeries[];
+  movies: Movie[];
 };
 
-export default function HomePage({ series }: HomePageProps) {
+export default function HomePage({ series, movies }: HomePageProps) {
   const router = useRouter();
 
   const [selectedSerie, setSelectedSerie] = useState<TvSeries | null>(null);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [selectedSeasonId, setSelectedSeasonId] = useState<number | null>(null);
-
-  const [selectedMovie, setSelectedMovie] = useState<TvSeries | null>(null);
 
   const handleOpenSerie = (serie: TvSeries) => {
     setSelectedSerie(serie);
@@ -23,56 +23,67 @@ export default function HomePage({ series }: HomePageProps) {
     }
   };
 
+  const handleOpenMovie = (movie: Movie) => {
+    setSelectedMovie(movie);
+  };
+
   const currentSeason = useMemo(() => {
     if (!selectedSerie?.seasons) return null;
     return selectedSerie.seasons.find((s) => s.id === selectedSeasonId);
   }, [selectedSerie, selectedSeasonId]);
 
-  const handleClose = (serie: TvSeries) => {
+  const handleClose = () => {
     setSelectedSerie(null);
+    setSelectedMovie(null);
   };
 
-  if (series && !series.length) return null;
+  if (!series || !series.length) return null;
 
   return (
     <div className="min-h-screen text-white p-8">
-      <h1 className="text-2xl font-bold">Séries</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-        {series.map((serie) => (
-          <div
-            key={serie.id}
-            className="cursor-pointer hover:scale-105 transition"
-            onClick={() => handleOpenSerie(serie)}
-          >
-            <img
-              src={serie.poster?.formats?.small?.url}
-              alt={serie.title}
-              className="w-full h-[250px] object-cover rounded"
-            ></img>
-          </div>
-        ))}
+      <h1 className="text-2xl font-bold mb-4">Séries</h1>
+
+      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4">
+        {series &&
+          series.map((serie) => (
+            <div
+              key={serie.id}
+              className="cursor-pointer hover:scale-105 transition"
+              onClick={() => handleOpenSerie(serie)}
+            >
+              <img
+                src={
+                  serie.poster?.formats?.small?.url || serie.poster?.url || ''
+                }
+                alt={serie.title}
+                className="w-full h-[300px] object-cover rounded"
+              />
+            </div>
+          ))}
       </div>
 
       {selectedSerie && (
-        <Modal isOpen={true} onClose={() => handleClose(selectedSerie)}>
+        <Modal isOpen={true} onClose={handleClose}>
           <div className="relative w-full h-[420px]">
             <img
-              src={
-                selectedSerie.background?.formats?.large?.url ||
-                selectedSerie.poster?.formats?.small?.url
-              }
+              src={selectedSerie.background?.formats?.large?.url || ''}
               alt={selectedSerie.title}
               className="w-full h-full object-cover"
             />
+
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+
             <div className="absolute bottom-6 left-6 right-6">
               <h2 className="text-4xl font-bold mb-2">{selectedSerie.title}</h2>
 
-              <span className="text-sm text-neutral-300">
-                {selectedSerie.genre?.name}
-              </span>
+              {selectedSerie.genres && selectedSerie.genres.length > 0 && (
+                <span className="text-sm text-neutral-300">
+                  {selectedSerie.genres.map((g) => g.name).join(' • ')}
+                </span>
+              )}
             </div>
           </div>
+
           <div className="p-6 space-y-6">
             <p className="text-sm text-neutral-300 leading-relaxed max-w-3xl">
               {selectedSerie.description}
@@ -92,7 +103,6 @@ export default function HomePage({ series }: HomePageProps) {
                           : 'border-neutral-700 text-neutral-300 hover:border-white'
                       }`}
                     >
-                      {' '}
                       Temporada {season.season}
                     </button>
                   ))}
@@ -114,11 +124,18 @@ export default function HomePage({ series }: HomePageProps) {
                       }}
                       className="flex gap-4 p-3 rounded cursor-pointer hover:bg-neutral-800 transition"
                     >
-                      <div className="w-32 h-20 bg-neutral-700 rounded flex items-center justify-center text-sm">
-                        EP. {episode.episode_number}
+                      <div className="w-60 h-20 bg-neutral-700 rounded flex items-center justify-center overflow-hidden">
+                        <img
+                          src={episode.thumbnail?.formats?.small?.url || ''}
+                          alt={selectedSerie.title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
+
                       <div>
-                        <h4 className="font-semibold">{episode.title}</h4>
+                        <h4 className="font-semibold">
+                          {episode.episode_number}. {episode.title}
+                        </h4>
                         <p className="text-sm text-neutral-400 line-clamp-2">
                           {episode.description}
                         </p>
@@ -131,8 +148,57 @@ export default function HomePage({ series }: HomePageProps) {
           </div>
         </Modal>
       )}
-      <h1 className="text-2xl font-bold mt-3">Filmes</h1>
-      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4"></div>
+
+      <h1 className="text-2xl font-bold mb-4">Filmes</h1>
+
+      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4">
+        {movies &&
+          movies.map((movie) => (
+            <div
+              key={movie.id}
+              className="cursor-pointer hover:scale-105 transition"
+              onClick={() => handleOpenMovie(movie)}
+            >
+              <img
+                src={
+                  movie.poster?.formats?.small?.url || movie.poster?.url || ''
+                }
+                alt={movie.title}
+                className="w-full h-[300px] object-cover rounded"
+              />
+            </div>
+          ))}
+      </div>
+
+      {selectedMovie && (
+        <Modal isOpen={true} onClose={handleClose}>
+          <div className="relative w-full h-[420px]">
+            <img
+              src={selectedMovie.background?.formats?.large?.url || ''}
+              alt={selectedMovie.title}
+              className="w-full h-full object-cover"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+
+            <div className="absolute bottom-6 left-6 right-6">
+              <h2 className="text-4xl font-bold mb-2">{selectedMovie.title}</h2>
+
+              {selectedMovie.genres && selectedMovie.genres.length > 0 && (
+                <span className="text-sm text-neutral-300">
+                  {selectedMovie.genres.map((g) => g.name).join(' • ')}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="p-6 space-y-6">
+            <p className="text-sm text-neutral-300 leading-relaxed max-w-3xl">
+              {selectedMovie.description}
+            </p>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

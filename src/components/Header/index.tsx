@@ -18,7 +18,7 @@ const Header = () => {
               href="/"
               className="text-sm font-semibold leading-6 hover:text-red-500 transition-colors"
             >
-              Home
+              
             </Link>
           </li>
         </ul>

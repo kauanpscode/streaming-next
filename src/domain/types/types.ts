@@ -73,7 +73,7 @@ export type TvSeries = {
   poster: Media;
   background: Media;
 
-  genre: Genre;
+  genres: Genre[];
   seasons: Season[];
 };
 
@@ -84,6 +84,33 @@ export type Episode = {
   title: string;
   description: string;
   videoUrl: string;
-  duration?: number;
-  cover?: Media;
+  thumbnail: Media;
+};
+
+export type Movie = {
+  id: ID;
+  documentId: string;
+  title: string;
+  description: string;
+  year: number;
+  duration: number;
+  createdAt: DateString;
+  updatedAt: DateString;
+  publishedAt: DateString;
+  movie_url: string | null;
+  poster: Media;
+  background: Media;
+  genres?: Genre[];
+};
+
+export type MovieResponse = {
+  data: Movie[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
 };
