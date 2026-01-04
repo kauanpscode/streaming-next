@@ -83,7 +83,7 @@ export type Episode = {
   documentId: string;
   title: string;
   description: string;
-  videoUrl: string;
+  video_url: string;
   thumbnail: Media;
 };
 

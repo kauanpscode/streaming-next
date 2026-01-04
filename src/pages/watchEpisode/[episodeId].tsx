@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { getEpisodeById } from '@/src/config/app-config';
+import { Episode } from '@/src/domain/types/types';
 
 export default function WatchEpisodePage() {
   const router = useRouter();
   const { episodeId } = router.query;
 
-  const [episode, setEpisode] = useState<any[]>([]);
+  const [episode, setEpisode] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,6 +33,14 @@ export default function WatchEpisodePage() {
 
   if (!episode) return null;
 
+  if (!episode.video_url) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        Vídeo indisponível
+      </div>
+    );
+  }
+
   const videoUrl = episode.video_url;
 
   return (
@@ -46,7 +55,8 @@ export default function WatchEpisodePage() {
       <video
         src={videoUrl}
         controls
-        autoPlay
+        preload="metadata"
+        playsInline
         className="w-full h-screen object-contain bg-black"
       />
     </div>

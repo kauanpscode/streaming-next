@@ -2,6 +2,7 @@ import { TvSeries, Movie } from '@/src/domain/types/types';
 import { useState, useMemo } from 'react';
 import { Modal } from '@/src/components/Modal/Modal';
 import { useRouter } from 'next/router';
+import { MediaCard } from '@/src/components/MediaCard';
 
 export type HomePageProps = {
   series: TvSeries[];
@@ -34,33 +35,33 @@ export default function HomePage({ series, movies }: HomePageProps) {
 
   const handleClose = () => {
     setSelectedSerie(null);
+    setSelectedSeasonId(null);
     setSelectedMovie(null);
   };
 
   if (!series || !series.length) return null;
 
   return (
-    <div className="min-h-screen text-white p-8">
-      <h1 className="text-2xl font-bold mb-4">Séries</h1>
-
-      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4">
-        {series &&
-          series.map((serie) => (
-            <div
-              key={serie.id}
-              className="cursor-pointer hover:scale-105 transition"
-              onClick={() => handleOpenSerie(serie)}
-            >
-              <img
-                src={
+    <main className="min-h-screen text-white p-8">
+      <section className="mb-12">
+        <h2 className="text-2xl font-semibold mb-6">Séries</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {series?.map(
+            (
+              serie, 
+            ) => (
+              <MediaCard
+                key={serie.id}
+                title={serie.title}
+                image={
                   serie.poster?.formats?.small?.url || serie.poster?.url || ''
                 }
-                alt={serie.title}
-                className="w-full h-[300px] object-cover rounded"
+                onClick={() => handleOpenSerie(serie)}
               />
-            </div>
-          ))}
-      </div>
+            ),
+          )}
+        </div>
+      </section>
 
       {selectedSerie && (
         <Modal isOpen={true} onClose={handleClose}>
@@ -120,7 +121,7 @@ export default function HomePage({ series, movies }: HomePageProps) {
                       key={episode.id}
                       onClick={() => {
                         setSelectedSerie(null);
-                        router.push(`/watch/${episode.id}`);
+                        router.push(`/watchEpisode/${episode.id}`);
                       }}
                       className="flex gap-4 p-3 rounded cursor-pointer hover:bg-neutral-800 transition"
                     >
@@ -151,7 +152,7 @@ export default function HomePage({ series, movies }: HomePageProps) {
 
       <h1 className="text-2xl font-bold mb-4">Filmes</h1>
 
-      <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-4">
+      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {movies &&
           movies.map((movie) => (
             <div
@@ -197,8 +198,13 @@ export default function HomePage({ series, movies }: HomePageProps) {
               {selectedMovie.description}
             </p>
           </div>
+          <button
+            className={`px-4 py-2 rounded text-lg border transition border-neutral-700 text-neutral-300 hover:border-black hover:bg-white hover:text-black`}
+          >
+            Assistir
+          </button>
         </Modal>
       )}
-    </div>
+    </main>
   );
 }
