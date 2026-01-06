@@ -3,6 +3,8 @@ import { useState, useMemo } from 'react';
 import { Modal } from '@/src/components/Modal/Modal';
 import { useRouter } from 'next/router';
 import { MediaCard } from '@/src/components/MediaCard';
+import { PrimaryButton } from '@/src/components/PrimaryButton';
+import Link from 'next/link';
 
 export type HomePageProps = {
   series: TvSeries[];
@@ -46,20 +48,16 @@ export default function HomePage({ series, movies }: HomePageProps) {
       <section className="mb-12">
         <h2 className="text-2xl font-semibold mb-6">Séries</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {series?.map(
-            (
-              serie, 
-            ) => (
-              <MediaCard
-                key={serie.id}
-                title={serie.title}
-                image={
-                  serie.poster?.formats?.small?.url || serie.poster?.url || ''
-                }
-                onClick={() => handleOpenSerie(serie)}
-              />
-            ),
-          )}
+          {series?.map((serie) => (
+            <MediaCard
+              key={serie.id}
+              title={serie.title}
+              image={
+                serie.poster?.formats?.small?.url || serie.poster?.url || ''
+              }
+              onClick={() => handleOpenSerie(serie)}
+            />
+          ))}
         </div>
       </section>
 
@@ -117,15 +115,15 @@ export default function HomePage({ series, movies }: HomePageProps) {
 
                 <div className="space-y-3">
                   {currentSeason.episodes.map((episode) => (
-                    <div
+                    <Link
+                      href={`/watchEpisode/${episode.id}`}
                       key={episode.id}
                       onClick={() => {
                         setSelectedSerie(null);
-                        router.push(`/watchEpisode/${episode.id}`);
                       }}
                       className="flex gap-4 p-3 rounded cursor-pointer hover:bg-neutral-800 transition"
                     >
-                      <div className="w-60 h-20 bg-neutral-700 rounded flex items-center justify-center overflow-hidden">
+                      <div className="w-60 h-20 bg-neutral-700   rounded flex items-center justify-center overflow-hidden">
                         <img
                           src={episode.thumbnail?.formats?.small?.url || ''}
                           alt={selectedSerie.title}
@@ -141,7 +139,7 @@ export default function HomePage({ series, movies }: HomePageProps) {
                           {episode.description}
                         </p>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -153,22 +151,14 @@ export default function HomePage({ series, movies }: HomePageProps) {
       <h1 className="text-2xl font-bold mb-4">Filmes</h1>
 
       <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {movies &&
-          movies.map((movie) => (
-            <div
-              key={movie.id}
-              className="cursor-pointer hover:scale-105 transition"
-              onClick={() => handleOpenMovie(movie)}
-            >
-              <img
-                src={
-                  movie.poster?.formats?.small?.url || movie.poster?.url || ''
-                }
-                alt={movie.title}
-                className="w-full h-[300px] object-cover rounded"
-              />
-            </div>
-          ))}
+        {movies?.map((movie) => (
+          <MediaCard
+            title={movie.title}
+            key={movie.id}
+            image={movie.poster?.formats?.small?.url || movie.poster?.url || ''}
+            onClick={() => handleOpenMovie(movie)}
+          />
+        ))}
       </div>
 
       {selectedMovie && (
@@ -197,12 +187,10 @@ export default function HomePage({ series, movies }: HomePageProps) {
             <p className="text-sm text-neutral-300 leading-relaxed max-w-3xl">
               {selectedMovie.description}
             </p>
+            <Link href={`/watchMovie/${selectedMovie.id}`}>
+              <PrimaryButton>Assistir</PrimaryButton>
+            </Link>
           </div>
-          <button
-            className={`px-4 py-2 rounded text-lg border transition border-neutral-700 text-neutral-300 hover:border-black hover:bg-white hover:text-black`}
-          >
-            Assistir
-          </button>
         </Modal>
       )}
     </main>

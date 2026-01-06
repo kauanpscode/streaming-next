@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getEpisodeById } from '@/src/config/app-config';
 import { Episode } from '@/src/domain/types/types';
+import { getEpisodeById } from '@/src/data/series/get-episode-by-id';
 
 export default function WatchEpisodePage() {
   const router = useRouter();

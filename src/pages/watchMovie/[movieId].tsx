@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getEpisodeById } from '@/src/config/app-config';
 import { Episode } from '@/src/domain/types/types';
+import { getMovieById } from '@/src/data/series/get-movie-by-id';
 
 export default function WatchEpisodePage() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function WatchEpisodePage() {
 
     const loadEpisode = async () => {
       setLoading(true);
-      const data = await getEpisodeById(episodeId as string);
+      const data = await getMovieById(episodeId as string);
       setEpisode(data);
       setLoading(false);
     };
@@ -26,7 +26,7 @@ export default function WatchEpisodePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        Carregando episódio...
+        Carregando filme...
       </div>
     );
   }

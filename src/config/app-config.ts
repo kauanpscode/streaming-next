@@ -14,10 +14,3 @@ export const MOVIES_URL =
 export const getSerieByIdUrl = (id: number) => {
   return `${API_URL}/tv-series?filters[id][$eq]=${id}&populate=*`;
 };
-
-export const getEpisodeById = async (id: string | number) => {
-  const res = await fetch(`${API_URL}/episodes?filters[id][$eq]=${id}&populate=*`);
-
-  const json = await res.json();
-  return json.data[0] ?? null;
-};
